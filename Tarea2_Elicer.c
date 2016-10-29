@@ -81,6 +81,7 @@ void jugada(int *letra1, int *num1, int *letra2, int *num2){
 }
 
 int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
+	int i;
 
 	if (contador%2==0) {		//Jugador 1
 		if(tablero[*letra1][*num1]-'a'<-32 || tablero[*letra1][*num1]-'a'>-7){//Jugada no corresponde a una pieza del J1.
@@ -126,9 +127,70 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 		}//end Peon
 
 		if(tablero[*letra1][*num1]-'a'==-13){//T - Torre
-
-
-
+			if(*num1==*num2){//Movimiento recto vertical
+				if(*letra1-*letra2>0){//Hacia arriba
+					for(i=*letra1-1;i>*letra2;i--){//Verifica si la torre se topa con otra pieza antes de llegar
+						if(tablero[i][*num1]-'a'!=-51){// !='.'
+							printf("Jugada invalida. Otra pieza obstruye el camino de la Torre\n");
+							return 0;
+						}
+					}//end for i
+					if(tablero[i][*num1]-'a'>=-32 && tablero[i][*num1]-'a'<=-7){//Pieza Jugador 1 en dicha posicion
+						printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+						return 0;
+					}else{//Elimina pieza Jugador 2 o avanza normalmente.
+						return 1;
+					}
+				}//fin arriba
+				else{//Hacia abajo
+					for(i=*letra1+1;i<*letra2;i++){//Verifica si la torre se topa con otra pieza antes de llegar
+						if(tablero[i][*num1]-'a'!=-51){// !='.'
+							printf("Jugada invalida. Otra pieza obstruye el camino de la Torre\n");
+							return 0;
+						}
+					}//end for i
+					if(tablero[i][*num1]-'a'>=-32 && tablero[i][*num1]-'a'<=-7){//Pieza Jugador 1 en dicha posicion
+						printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+						return 0;
+					}else{//Elimina pieza Jugador 2 o avanza normalmente.
+						return 1;
+					}
+				}//fin abajo
+			}//fin if vertical
+			else if(*letra1==*letra2){//Movimiento recto horizontal
+				if(*num1-*num2>0){//Hacia izquierda
+					for(i=*num1-1;i>*num2;i--){//Verifica si la torre se topa con otra pieza antes de llegar
+						if(tablero[*letra1][i]-'a'!=-51){// !='.'
+							printf("Jugada invalida. Otra pieza obstruye el camino de la Torre\n");
+							return 0;
+						}
+					}//end for i
+					if(tablero[*letra1][i]-'a'>=-32 && tablero[*letra1][i]-'a'<=-7){//Pieza Jugador 1 en dicha posicion
+						printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+						return 0;
+					}else{//Elimina pieza Jugador 2 o avanza normalmente.
+						return 1;
+					}
+				}//fin izquierda
+				else{//Hacia derecha
+					for(i=*num1+1;i<*num2;i++){//Verifica si la torre se topa con otra pieza antes de llegar
+						if(tablero[*letra1][i]-'a'!=-51){// !='.'
+							printf("Jugada invalida. Otra pieza obstruye el camino de la Torre\n");
+							return 0;
+						}
+					}//end for i
+					if(tablero[*letra1][i]-'a'>=-32 && tablero[*letra1][i]-'a'<=-7){//Pieza Jugador 1 en dicha posicion
+						printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+						return 0;
+					}else{//Elimina pieza Jugador 2 o avanza normalmente.
+						return 1;
+					}
+				}//fin derecha
+			}//fin if horizontal
+			else{
+				printf("Jugada invalida. Movimiento no permitido por una torre\n");
+				return 0;
+			}
 		}//end Torre
 
 		if(tablero[*letra1][*num1]-'a'==-30){//C - Caballo
