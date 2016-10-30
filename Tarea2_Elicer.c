@@ -343,7 +343,7 @@ int verificar(int letra1, int num1, int letra2, int num2, int contador){
 				printf("No hay pieza en dicha posicion.\n");
 			}
 			else{
-				printf("No puedes mover una ficha del Jugador 2.\n");
+				printf("No puedes mover una pieza del Jugador 2.\n");
 			}
 			return 0;
 		}
@@ -410,7 +410,7 @@ int verificar(int letra1, int num1, int letra2, int num2, int contador){
 				printf("No hay pieza en dicha posicion.\n");
 			}
 			else{
-				printf("No puedes mover una ficha del Jugador 1.\n");
+				printf("No puedes mover una pieza del Jugador 1.\n");
 			}
 			return 0;
 		}
@@ -473,7 +473,72 @@ int verificar(int letra1, int num1, int letra2, int num2, int contador){
 }//end verificar
 
 void mover(int letra1, int num1, int letra2, int num2) {
+	char c, pieza[50];
+	int k=1;
+
 	tablero[letra2][num2] = tablero[letra1][num1];
+	if(tablero[letra2][num2]-'a'==-17 && letra2==7){//Peon J1 llega al otro lado
+		printf("Peon tuyo llegó al otro extremo del tablero, eliga una pieza (t,c,a,q): ");
+		while(k){
+			fgets(pieza,sizeof(pieza),stdin);
+			sscanf(pieza,"%c",&c);
+			while(strlen(pieza)>2){
+				printf("Ingrese una pieza valida (t,c,a,q): ");
+				fgets(pieza,sizeof(pieza),stdin);
+				sscanf(pieza,"%c",&c);
+			}
+			if(toupper(c)-'a'==-13){//T - Torre
+				tablero[letra2][num2]='T';
+				k=0;
+			}
+			else if(toupper(c)-'a'==-30){//C - Caballo
+				tablero[letra2][num2]='C';
+				k=0;
+			}
+			else if(toupper(c)-'a'==-32){//A - Alfil
+				tablero[letra2][num2]='A';
+				k=0;
+			}
+			else if(toupper(c)-'a'==-16){//Q - Queen
+				tablero[letra2][num2]='Q';
+				k=0;
+			}
+			else{
+				printf("Ingrese una pieza valida (t,c,a,q): ");
+			}
+		}//end while
+	}
+	else if(tablero[letra2][num2]-'a'==15 && letra2==0){//Peon J2 llega al otro lado
+		printf("Peon tuyo llegó al otro extremo del tablero, eliga una pieza (t,c,a,q): ");
+		while(k){
+			fgets(pieza,sizeof(pieza),stdin);
+			sscanf(pieza,"%c",&c);
+			while(strlen(pieza)>2){
+				printf("Ingrese una pieza valida (t,c,a,q): ");
+				fgets(pieza,sizeof(pieza),stdin);
+				sscanf(pieza,"%c",&c);
+			}
+			if(toupper(c)-'a'==-13){//T - Torre
+				tablero[letra2][num2]='t';
+				k=0;
+			}
+			else if(toupper(c)-'a'==-30){//C - Caballo
+				tablero[letra2][num2]='c';
+				k=0;
+			}
+			else if(toupper(c)-'a'==-32){//A - Alfil
+				tablero[letra2][num2]='a';
+				k=0;
+			}
+			else if(toupper(c)-'a'==-16){//Q - Queen
+				tablero[letra2][num2]='q';
+				k=0;
+			}
+			else{
+				printf("Ingrese una pieza valida (t,c,a,q): ");
+			}
+		}
+	}
 	tablero[letra1][num1] = ' ';
 }
 
