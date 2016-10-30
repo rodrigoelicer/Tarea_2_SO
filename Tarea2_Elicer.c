@@ -5,7 +5,7 @@
 
 //Mayus - 'a' = [-32,-7]
 //Minus - 'a' = [0,25]
-//'.' - 'a' = -51
+//' ' - 'a' = -65
 
 char tablero[8][8];
 
@@ -18,7 +18,7 @@ void iniciar() {
 		tablero[1][i] = 'P';
 
 		for (j = 2;j<6;j++) {
-			tablero[j][i] = '.';
+			tablero[j][i] = ' ';
 		}
 
 		tablero[6][i] = 'p';
@@ -38,21 +38,21 @@ void imprimirTablero(int contador) {
 	}
 
 	printf("Jugando jugador: %d\n",k);
-	printf("\n |");
+	printf("\n  |");
 	for (i = 0;i<8;i++) {
-		printf("%d",i);
+		printf(" %d |",i);
 	}
 	printf("\n");
-	printf("-|--------\n");
+	printf("--|-------------------------------|\n");
 
 	for (i = 0;i<8;i++) {
-		printf("%c|",'A'+i);
+		printf("%c |",'A'+i);
 		for (j = 0;j<8;j++) {
-			printf("%c",tablero[i][j]);
+			printf(" %c |",tablero[i][j]);
 		}
 		printf("\n");
+		printf("--|-------------------------------|\n");
 	}
-
 }
 
 void jugada(int *letra1, int *num1, int *letra2, int *num2){
@@ -90,7 +90,7 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 	if (contador%2==0) {
 		if(tablero[*letra1][*num1]-'a'<-32 || tablero[*letra1][*num1]-'a'>-7){//Jugada no corresponde a una pieza del J1.
 			printf("Jugada invalida. ");
-			if(tablero[*letra1][*num1]-'a'==-51){
+			if(tablero[*letra1][*num1]-'a'==-65){
 				printf("No hay pieza en dicha posicion.\n");
 			}
 			else{
@@ -137,8 +137,8 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 			if(*num1==*num2){//Movimiento recto vertical
 				if(*letra1-*letra2>0){//Hacia arriba
 					for(i=*letra1-1;i>*letra2;i--){//Verifica si la torre se topa con otra pieza antes de llegar
-						if(tablero[i][*num1]-'a'!=-51){// !='.'
-							printf("Jugada invalida. Otra pieza obstruye el camino de la Torre\n");
+						if(tablero[i][*num1]-'a'!=-65){// !=' '
+							printf("Jugada invalida. Otra pieza obstruye el camino de la torre\n");
 							return 0;
 						}
 					}//end for i
@@ -151,8 +151,8 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 				}//fin arriba
 				else{//Hacia abajo
 					for(i=*letra1+1;i<*letra2;i++){//Verifica si la torre se topa con otra pieza antes de llegar
-						if(tablero[i][*num1]-'a'!=-51){// !='.'
-							printf("Jugada invalida. Otra pieza obstruye el camino de la Torre\n");
+						if(tablero[i][*num1]-'a'!=-65){// !=' '
+							printf("Jugada invalida. Otra pieza obstruye el camino de la torre\n");
 							return 0;
 						}
 					}//end for i
@@ -167,8 +167,8 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 			else if(*letra1==*letra2){//Movimiento recto horizontal
 				if(*num1-*num2>0){//Hacia izquierda
 					for(i=*num1-1;i>*num2;i--){//Verifica si la torre se topa con otra pieza antes de llegar
-						if(tablero[*letra1][i]-'a'!=-51){// !='.'
-							printf("Jugada invalida. Otra pieza obstruye el camino de la Torre\n");
+						if(tablero[*letra1][i]-'a'!=-65){// !=' '
+							printf("Jugada invalida. Otra pieza obstruye el camino de la torre\n");
 							return 0;
 						}
 					}//end for i
@@ -181,8 +181,8 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 				}//fin izquierda
 				else{//Hacia derecha
 					for(i=*num1+1;i<*num2;i++){//Verifica si la torre se topa con otra pieza antes de llegar
-						if(tablero[*letra1][i]-'a'!=-51){// !='.'
-							printf("Jugada invalida. Otra pieza obstruye el camino de la Torre\n");
+						if(tablero[*letra1][i]-'a'!=-65){// !=' '
+							printf("Jugada invalida. Otra pieza obstruye el camino de la torre\n");
 							return 0;
 						}
 					}//end for i
@@ -230,9 +230,70 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 /*************************************************************************/
 		//A - Alfil
 		if(tablero[*letra1][*num1]-'a'==-32){
-
-
-
+			if(abs(*letra1-*letra2)==abs(*num1-*num2)){
+				if(*letra2-*letra1>0){//Hacia abajo
+					if(*num2-*num1>0){//Abajo DER
+						for(i=*num1+1;i<*num2;i++){
+							if(tablero[*letra1+i-*num1][i]-'a'!=-65){// !=' '
+								printf("Jugada invalida. Otra pieza obstruye el camino del alfil\n");
+								return 0;
+							}
+						}//end for i
+						if(tablero[*letra1+i-*num1][i]-'a'>=-32 && tablero[*letra1+i-*num1][i]-'a'<=-7){//Pieza Jugador 1 en dicha posicion
+							printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+							return 0;
+						}else{//Elimina pieza Jugador 2 o avanza normalmente.
+							return 1;
+						}
+					}//end Abajo DER
+					else{//Abajo IZQ
+						for(i=*num1-1;i>*num2;i--){
+							if(tablero[*letra1-i+*num1][i]-'a'!=-65){// !=' '
+								printf("Jugada invalida. Otra pieza obstruye el camino del alfil\n");
+								return 0;
+							}
+						}//end for i
+						if(tablero[*letra1-i+*num1][i]-'a'>=-32 && tablero[*letra1-i+*num1][i]-'a'<=-7){//Pieza Jugador 1 en dicha posicion
+							printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+							return 0;
+						}else{//Elimina pieza Jugador 2 o avanza normalmente.
+							return 1;
+						}
+					}//end Abajo IZQ
+				}//end abajo
+				else{//Hacia arriba
+					if(*num2-*num1>0){//Arriba DER
+						for(i=*num1+1;i<*num2;i++){
+							if(tablero[*letra1-i+*num1][i]-'a'!=-65){// !=' '
+								printf("Jugada invalida. Otra pieza obstruye el camino del alfil\n");
+								return 0;
+							}
+						}//end for i
+						if(tablero[*letra1-i+*num1][i]-'a'>=-32 && tablero[*letra1-i+*num1][i]-'a'<=-7){//Pieza Jugador 1 en dicha posicion
+							printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+							return 0;
+						}else{//Elimina pieza Jugador 2 o avanza normalmente.
+							return 1;
+						}
+					}//end Arriba DER
+					else{//Arriba IZQ
+						for(i=*num1-1;i>*num2;i--){
+							if(tablero[*letra1+i-*num1][i]-'a'!=-65){// !=' '
+								printf("Jugada invalida. Otra pieza obstruye el camino del alfil\n");
+								return 0;
+							}
+						}//end for i
+						if(tablero[*letra1+i-*num1][i]-'a'>=-32 && tablero[*letra1+i-*num1][i]-'a'<=-7){//Pieza Jugador 1 en dicha posicion
+							printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+							return 0;
+						}else{//Elimina pieza Jugador 2 o avanza normalmente.
+							return 1;
+						}
+					}//end Arriba IZQ
+				}//end arriba
+			}//end if alfil
+			printf("Jugada invalida. Movimiento no permitido por un alfil\n");
+			return 0;
 		}//end Alfil
 /*************************************************************************/
 		//R - Rey
@@ -261,7 +322,7 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 
 void mover(int letra1, int num1, int letra2, int num2) {
 	tablero[letra2][num2] = tablero[letra1][num1];
-	tablero[letra1][num1] = '.';
+	tablero[letra1][num1] = ' ';
 
 }
 
@@ -281,10 +342,10 @@ int main()
 
 	while (!terminado()){
 		imprimirTablero(contador);//Imprime tableto.
-		jugada(&letra1,&num1,&letra2,&num2);//Ve si el input corresponde a la l�gica del juego.
+		jugada(&letra1,&num1,&letra2,&num2);//Ve si el input corresponde a la l?gica del juego.
 		ver = verificar(&letra1,&num1,&letra2,&num2,contador);//Valida el movimiento del jugador.
 		while(!ver){
-			jugada(&letra1,&num1,&letra2,&num2);//Ve si el input corresponde a la l�gica del juego.
+			jugada(&letra1,&num1,&letra2,&num2);//Ve si el input corresponde a la l?gica del juego.
 			ver = verificar(&letra1,&num1,&letra2,&num2,contador);//Valida el movimiento del jugador.
 		}
 		mover(letra1,num1,letra2,num2);//Una vez verificado el movimiento, se procede a mover la pieza.
