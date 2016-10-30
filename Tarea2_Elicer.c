@@ -3,8 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-//Mayus - 'a' = [-32,-7]
-//Minus - 'a' = [0,25]
+//Mayus - 'a' = [-32,-7] -> [A,Z]
+//Minus - 'a' = [0,25] -> [a, z]
 //' ' - 'a' = -65
 
 int max,min,i;
@@ -257,8 +257,130 @@ int queen(int letra1, int num1, int letra2, int num2, int J){
 		min=0;
 	}
 
-
-
+	if(num1==num2){//Movimiento recto vertical
+		if(letra1-letra2>0){//Hacia arriba
+			for(i=letra1-1;i>letra2;i--){//Verifica si la torre se topa con otra pieza antes de llegar
+				if(tablero[i][num1]-'a'!=-65){// !=' '
+					printf("Jugada invalida. Otra pieza obstruye el camino de la reina\n");
+					return 0;
+				}
+			}//end for i
+			if(tablero[i][num1]-'a'>=min && tablero[i][num1]-'a'<=max){//Pieza Jugador 1 en dicha posicion
+				printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+				return 0;
+			}else{//Elimina pieza Jugador rival o avanza normalmente.
+				return 1;
+			}
+		}//fin arriba
+		else{//Hacia abajo
+			for(i=letra1+1;i<letra2;i++){//Verifica si la torre se topa con otra pieza antes de llegar
+				if(tablero[i][num1]-'a'!=-65){// !=' '
+					printf("Jugada invalida. Otra pieza obstruye el camino de la reina\n");
+					return 0;
+				}
+			}//end for i
+			if(tablero[i][num1]-'a'>=min && tablero[i][num1]-'a'<=max){//Pieza Jugador 1 en dicha posicion
+				printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+				return 0;
+			}else{//Elimina pieza Jugador rival o avanza normalmente.
+				return 1;
+			}
+		}//fin abajo
+	}//fin if vertical
+	else if(letra1==letra2){//Movimiento recto horizontal
+		if(num1-num2>0){//Hacia izquierda
+			for(i=num1-1;i>num2;i--){//Verifica si la torre se topa con otra pieza antes de llegar
+				if(tablero[letra1][i]-'a'!=-65){// !=' '
+					printf("Jugada invalida. Otra pieza obstruye el camino de la reina\n");
+					return 0;
+				}
+			}//end for i
+			if(tablero[letra1][i]-'a'>=min && tablero[letra1][i]-'a'<=max){//Pieza Jugador 1 en dicha posicion
+				printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+				return 0;
+			}else{//Elimina pieza Jugador rival o avanza normalmente.
+				return 1;
+			}
+		}//fin izquierda
+		else{//Hacia derecha
+			for(i=num1+1;i<num2;i++){//Verifica si la torre se topa con otra pieza antes de llegar
+				if(tablero[letra1][i]-'a'!=-65){// !=' '
+					printf("Jugada invalida. Otra pieza obstruye el camino de la reina\n");
+					return 0;
+				}
+			}//end for i
+			if(tablero[letra1][i]-'a'>=min && tablero[letra1][i]-'a'<=-max){//Pieza Jugador 1 en dicha posicion
+				printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+				return 0;
+			}else{//Elimina pieza Jugador rival o avanza normalmente.
+				return 1;
+			}
+		}//fin derecha
+	}//fin if horizontal
+	else if(abs(letra1-letra2)==abs(num1-num2)){
+		if(letra2-letra1>0){//Hacia abajo
+			if(num2-num1>0){//Abajo DER
+				for(i=num1+1;i<num2;i++){
+					if(tablero[letra1+i-num1][i]-'a'!=-65){// !=' '
+						printf("Jugada invalida. Otra pieza obstruye el camino de la reina\n");
+						return 0;
+					}
+				}//end for i
+				if(tablero[letra1+i-num1][i]-'a'>=min && tablero[letra1+i-num1][i]-'a'<=max){//Pieza Jugador 1 en dicha posicion
+					printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+					return 0;
+				}else{//Elimina pieza Jugador rival o avanza normalmente.
+					return 1;
+				}
+			}//end Abajo DER
+			else{//Abajo IZQ
+				for(i=num1-1;i>num2;i--){
+					if(tablero[letra1-i+num1][i]-'a'!=-65){// !=' '
+						printf("Jugada invalida. Otra pieza obstruye el camino de la reina\n");
+						return 0;
+					}
+				}//end for i
+				if(tablero[letra1-i+num1][i]-'a'>=min && tablero[letra1-i+num1][i]-'a'<=max){//Pieza Jugador 1 en dicha posicion
+					printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+					return 0;
+				}else{//Elimina pieza Jugador rival o avanza normalmente.
+					return 1;
+				}
+			}//end Abajo IZQ
+		}//end abajo
+		else{//Hacia arriba
+			if(num2-num1>0){//Arriba DER
+				for(i=num1+1;i<num2;i++){
+					if(tablero[letra1-i+num1][i]-'a'!=-65){// !=' '
+						printf("Jugada invalida. Otra pieza obstruye el camino de la reina\n");
+						return 0;
+					}
+				}//end for i
+				if(tablero[letra1-i+num1][i]-'a'>=min && tablero[letra1-i+num1][i]-'a'<=max){//Pieza Jugador 1 en dicha posicion
+					printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+					return 0;
+				}else{//Elimina pieza Jugador rival o avanza normalmente.
+					return 1;
+				}
+			}//end Arriba DER
+			else{//Arriba IZQ
+				for(i=num1-1;i>num2;i--){
+					if(tablero[letra1+i-num1][i]-'a'!=-65){// !=' '
+						printf("Jugada invalida. Otra pieza obstruye el camino de la reina\n");
+						return 0;
+					}
+				}//end for i
+				if(tablero[letra1+i-num1][i]-'a'>=min && tablero[letra1+i-num1][i]-'a'<=max){//Pieza Jugador 1 en dicha posicion
+					printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+					return 0;
+				}else{//Elimina pieza Jugador rival o avanza normalmente.
+					return 1;
+				}
+			}//end Arriba IZQ
+		}//end arriba
+	}//end if alfil
+	printf("Jugada invalida. Movimiento no permitido por una reina\n");
+	return 0;
 }
 /*-------------------------------Piezas-------------------------------*/
 /*-----------------------------Funciones------------------------------*/
