@@ -298,9 +298,37 @@ int verificar(int *letra1, int *num1, int *letra2, int *num2, int contador){
 /*************************************************************************/
 		//R - Rey
 		if(tablero[*letra1][*num1]-'a'==-15){
-
-
-
+			if(abs(*num1-*num2)==1 && abs(*letra1-*letra2)==1){
+				if(tablero[*letra2][*num2]-'a'>=-32 && tablero[*letra2][*num2]-'a'<=-7){
+					printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+					return 0;
+				}
+				else{//Elimina pieza Jugador 2 o avanza normalmente.
+					return 1;
+				}
+			}
+			else if(abs(*num1-*num2)==1 && abs(*letra1-*letra2)==0){
+				if(tablero[*letra2][*num2]-'a'>=-32 && tablero[*letra2][*num2]-'a'<=-7){
+					printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+					return 0;
+				}
+				else{//Elimina pieza Jugador 2 o avanza normalmente.
+					return 1;
+				}
+			}
+			else if(abs(*num1-*num2)==0 && abs(*letra1-*letra2)==1){
+				if(tablero[*letra2][*num2]-'a'>=-32 && tablero[*letra2][*num2]-'a'<=-7){
+					printf("Jugada invalida. Una pieza tuya ya está en dicha posición\n");
+					return 0;
+				}
+				else{//Elimina pieza Jugador 2 o avanza normalmente.
+					return 1;
+				}
+			}
+			else{
+				printf("Jugada invalida. Movimiento no permitido por el rey\n");
+				return 0;
+			}
 		}//end Rey
 /*************************************************************************/
 		//Q - Queen
