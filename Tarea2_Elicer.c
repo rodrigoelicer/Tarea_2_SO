@@ -2,13 +2,19 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+//
+#include <sys/mman.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdint.h>
 
 //Mayus - 'a' = [-32,-7] -> [A,Z]
 //Minus - 'a' = [0,25] -> [a, z]
 //' ' - 'a' = -65
 
 int max,min,i;
-char tablero[8][8];
+//char tablero[8][8];
 
 /*-------------------------------Piezas-------------------------------*/
 int torre(int letra1, int num1, int letra2, int num2, int J){
@@ -402,10 +408,10 @@ void iniciar() {
 	}
 }
 
-void imprimirTablero(int contador) {
+void imprimirTablero(char *tablero, int contador) {
 	int i, j, k;
 
-	if (contador%2==0) {
+	if (contador==1) {
 		k = 1;
 	}
 	else {
@@ -457,7 +463,7 @@ void jugada(int *letra1, int *num1, int *letra2, int *num2){
 
 int verificar(int letra1, int num1, int letra2, int num2, int contador){
 	//Jugador 1
-	if (contador%2==0) {
+	if (contador==1) {
 		//Jugada no corresponde a una pieza del J1.
 		if(tablero[letra1][num1]-'a'<-32 || tablero[letra1][num1]-'a'>-7){
 			printf("Jugada invalida. ");
@@ -673,22 +679,58 @@ int terminado() {
 int main(){
 	int letra1, num1;
 	int letra2, num2;
-	int contador=0, ver;
+	int contador=1, ver;
+	int pipePadre[2], pipeHijo[2], id, read[15];
+
+	char *tablero = mmap(NULL, sizeof(char)*66, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);		//tablero de ajedrez
+	strcpy(tablero, "TCARQACTPPPPPPPP--------------------------------pppppppptcarqact");
+
+	pipe(pipePadre);
+	pipe(pipeHijo);
 
 	iniciar();
 
-	while (!terminado()){
-		imprimirTablero(contador);//Imprime tableto.
-		jugada(&letra1,&num1,&letra2,&num2);//Ve si el input corresponde a la l?gica del juego.
-		ver = verificar(letra1,num1,letra2,num2,contador);//Valida el movimiento del jugador.
-		while(!ver){
-			jugada(&letra1,&num1,&letra2,&num2);//Ve si el input corresponde a la l?gica del juego.
-			ver = verificar(letra1,num1,letra2,num2,contador);//Valida el movimiento del jugador.
-		}
-		mover(letra1,num1,letra2,num2);//Una vez verificado el movimiento, se procede a mover la pieza.
-		contador++;
+	id = fork();
+	if (id > 0){			//id Padre = 1 ; id Hijo = 0
+		id = 1;
 	}
 
+	while (!terminado()){
+		if(contador==id){//ZC
+			imprimirTablero(tablero, contador);//Imprime tableto.
+			jugada(&letra1,&num1,&letra2,&num2);//Ve si el input corresponde a la l?gica del juego.
+			/*ver = verificar(letra1,num1,letra2,num2,contador);//Valida el movimiento del jugador.
+			while(!ver){
+				jugada(&letra1,&num1,&letra2,&num2);//Ve si el input corresponde a la l?gica del juego.
+				ver = verificar(letra1,num1,letra2,num2,contador);//Valida el movimiento del jugador.
+			}
+			mover(letra1,num1,letra2,num2);//Una vez verificado el movimiento, se procede a mover la pieza.
+			*/
+			if(id==1){//Padre
+				close(pipePadre[0]);
+				write(pipePadre[1],"1",(strlen("0")+1));
+			}
+			else{//Hijo
+				close(pipeHijo[0]);
+				write(pipeHijo[1],"0",(strlen("0")+1));
+			}
+		}//end if ZC
+
+		if(id==1){
+			close(pipeHijo[1]);
+			read(pipeHijo[0],read,sizeof(read));
+			contador=atoi(read);
+		}
+		else{
+			close(pipePadre[1]);
+			read(pipePadre[0],read,sizeof(read));
+			contador=atoi(read);
+		}
+
+	}
+
+	wait(NULL);
+	munmap(tablero, sizeof(char)*65);
 	return 0;
 }
 /*-------------------------------Main---------------------------------*/
