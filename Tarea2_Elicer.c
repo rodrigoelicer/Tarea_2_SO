@@ -75,6 +75,8 @@ int torre(char *tablero, int letra1, int num1, int letra2, int num2, int J){
 		else{//Hacia derecha
 			for(i=num1+1;i<num2;i++){//Verifica si la torre se topa con otra pieza antes de llegar
 				if(tablero[letra1*8+i]-'a'!=-65){// !=' '
+					printf("tablero: %s",tablero);
+					printf("derecha wea\n");
 					printf("Jugada invalida. Otra pieza obstruye el camino de la torre\n");
 					return 0;
 				}
@@ -390,7 +392,7 @@ int queen(char *tablero, int letra1, int num1, int letra2, int num2, int J){
 /*-------------------------------Piezas-------------------------------*/
 /*-----------------------------Funciones------------------------------*/
 void iniciar(char *tablero) {
-	strcpy(tablero, "TCARQACTPPPPPPPP--------------------------------pppppppptcarqact");
+	strcpy(tablero, "TCARQACTPPPPPPPP                                pppppppptcarqact");
 }
 
 void imprimirTablero(char *tablero, int contador) {
@@ -406,13 +408,13 @@ void imprimirTablero(char *tablero, int contador) {
 	printf("\nJugando jugador: %d\n",k);
 	printf("\n  |");
 	for (i = 0;i<8;i++) {
-		printf(" %d |",i);
+		printf(" %c |",'A'+i);
 	}
 	printf("\n");
 	printf("--|-------------------------------|\n");
 
 	for (i = 0;i<8;i++) {
-		printf("%c |",'A'+i);
+		printf("%d |",i);
 		for (j = 0;j<8;j++) {
 			printf(" %c |",tablero[8*i+j]);
 		}
@@ -427,10 +429,10 @@ void jugada(int *letra1, int *num1, int *letra2, int *num2){
 	fgets(jugada,sizeof(jugada),stdin);
 	sscanf(jugada,"%s %c %s",A,&c,B);
 
-	*letra1 = A[0] - 'A';
-	*num1 = A[1] - '0';
-	*letra2 = B[0] - 'A';
-	*num2 = B[1] - '0';
+	*letra1 = A[1] - '0';
+	*num1 = A[0] - 'A';
+	*letra2 = B[1] - '0';
+	*num2 = B[0] - 'A';
 
 	//Error base, input invalido
 	while( c!='a' || *letra1>7 || *letra1<0 || *letra2>7 || *letra2<0 || *num1>7 || *num1<0 || *num2>7 || *num2<0 || (*letra1==*letra2 && *num1==*num2)){
@@ -439,10 +441,10 @@ void jugada(int *letra1, int *num1, int *letra2, int *num2){
 		fgets(jugada,sizeof(jugada),stdin);
 		sscanf(jugada,"%s %c %s",A,&c,B);
 
-		*letra1 = A[0] - 'A';
-		*num1 = A[1] - '0';
-		*letra2 = B[0] - 'A';
-		*num2 = B[1] - '0';
+		*letra1 = A[1] - '0';
+		*num1 = A[0] - 'A';
+		*letra2 = B[1] - '0';
+		*num2 = B[0] - 'A';
 	};
 }
 
@@ -573,7 +575,7 @@ int verificar(char *tablero, int letra1, int num1, int letra2, int num2, int con
 			return alfil(tablero,letra1,num1,letra2,num2,2);
 		}
 		//r - Rey
-		else if(tablero[letra1*8+num1]-'a'==17){			
+		else if(tablero[letra1*8+num1]-'a'==17){
 			return rey(tablero,letra1,num1,letra2,num2,2);
 		}
 		//q - Queen
@@ -690,7 +692,7 @@ int main(){
 				ver = verificar(tablero, letra1,num1,letra2,num2,contador);//Valida el movimiento del jugador.
 			}
 			mover(tablero,letra1,num1,letra2,num2);//Una vez verificado el movimiento, se procede a mover la pieza.
-			
+
 			if(id==1){//Padre
 				close(pipePadre[0]);
 				write(pipePadre[1],"0",(strlen("0")+1));
